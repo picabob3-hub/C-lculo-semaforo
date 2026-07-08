@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Semáforo VIVA ESTUDIO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        .header h1 {
+            color: #2563eb;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: bold;
+        }
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .input-group {
+            display: none;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px dashed #cbd5e1;
+        }
+        .input-group.active {
+            display: block;
+        }
+        .shape-illustration {
+            text-align: center;
+            margin-bottom: 15px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #e5e7eb;
+            display: none;
+            font-size: 15px;
+            line-height: 1.5;
+            box-sizing: border-box;
+        }
+        .resaltado {
+            font-weight: bold;
+            color: #b91c1c;
+            font-size: 18px;
+        }
+        .semaforo-grafico {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+            background-color: #fff;
+            border-radius: 8px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Cálculo de Semáforo</h1>
+        <p>VIVA ESTUDIO</p>
+    </div>
+    
+    <label for="forma">Forma del Envase / Etiqueta:</label>
+    <select id="forma" onchange="actualizarCampos()">
+        <option value="rectangular">Rectangular / Cuadrada</option>
+        <option value="circular">Circular</option>
+        <option value="conica">Cónica</option>
+    </select>
+
+    <div id="grupo-rectangular" class="input-group active">
+        <div class="shape-illustration">
+            <svg width="120" height="90" viewBox="0 0 120 90">
+                <rect x="40" y="10" width="50" height="60" stroke="#2563eb" stroke-width="2" fill="#e0e7ff" />
+                <line x1="30" y1="10" x2="30" y2="70" stroke="#6b7280" stroke-width="1.5" />
+                <polygon points="30,10 27,15 33,15" fill="#6b7280" />
+                <polygon points="30,70 27,65 33,65" fill="#6b7280" />
+                <text x="3" y="45" font-size="12" fill="#6b7280" font-family="sans-serif">Alto</text>
+                <line x1="40" y1="80" x2="90" y2="80" stroke="#6b7280" stroke-width="1.5" />
+                <polygon points="40,80 45,77 45,83" fill="#6b7280" />
+                <polygon points="90,80 85,77 85,83" fill="#6b7280" />
+                <text x="50" y="90" font-size="11" fill="#6b7280" font-family="sans-serif">Ancho</text>
+            </svg>
+        </div>
+        <label for="alto">Alto de la etiqueta (en cm):</label>
+        <input type="number" id="alto" placeholder="Ej. 15.5" step="0.1">
+        <label for="ancho">Ancho de la etiqueta (en cm):</label>
+        <input type="number" id="ancho" placeholder="Ej. 8.2" step="0.1">
+    </div>
+
+    <div id="grupo-circular" class="input-group">
+        <div class="shape-illustration">
+            <svg width="120" height="90" viewBox="0 0 120 90">
+                <circle cx="60" cy="45" r="35" stroke="#2563eb" stroke-width="2" fill="#e0e7ff" />
+                <line x1="60" y1="45" x2="95" y2="45" stroke="#6b7280" stroke-width="2" />
+                <circle cx="60" cy="45" r="3" fill="#ef4444" />
+                <text x="65" y="40" font-size="12" fill="#ef4444" font-weight="bold" font-family="sans-serif">Radio</text>
+            </svg>
+        </div>
+        <label for="radio">Radio de la etiqueta (en cm):</label>
+        <input type="number" id="radio" placeholder="Ej. 8" step="0.1">
+    </div>
+
+    <div id="grupo-conica" class="input-group">
+        <div class="shape-illustration">
+            <svg width="120" height="100" viewBox="0 0 120 100">
+                <path d="M60,10 L30,75 A30,10 0 0,0 90,75 Z" stroke="#2563eb" stroke-width="2" fill="#e0e7ff" />
+                <ellipse cx="60" cy="75" rx="30" ry="10" stroke="#2563eb" stroke-width="1" fill="none" stroke-dasharray="3,3"/>
+                <line x1="60" y1="75" x2="90" y2="75" stroke="#ef4444" stroke-width="2" />
+                <circle cx="60" cy="75" r="3" fill="#ef4444" />
+                <text x="63" y="88" font-size="11" fill="#ef4444" font-weight="bold" font-family="sans-serif">Radio</text>
+                <line x1="25" y1="75" x2="55" y2="10" stroke="#10b981" stroke-width="2" />
+                <text x="5" y="45" font-size="11" fill="#10b981" font-weight="bold" font-family="sans-serif">Gen.</text>
+            </svg>
+        </div>
+        <label for="radio-cono">Radio de la base/etiqueta (en cm):</label>
+        <input type="number" id="radio-cono" placeholder="Ej. 3.2" step="0.01">
+
+        <label for="generatriz">Generatriz / Largo inclinado (en cm):</label>
+        <input type="number" id="generatriz" placeholder="Ej. 16.7" step="0.01">
+    </div>
+
+    <button onclick="calcularSemaforo()">Calcular Medidas</button>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+    function actualizarCampos() {
+        document.getElementById('grupo-rectangular').classList.remove('active');
+        document.getElementById('grupo-circular').classList.remove('active');
+        document.getElementById('grupo-conica').classList.remove('active');
+
+        const forma = document.getElementById('forma').value;
+        document.getElementById('grupo-' + forma).classList.add('active');
+        document.getElementById('resultado').style.display = 'none';
+    }
+
+    function calcularSemaforo() {
+        const forma = document.getElementById('forma').value;
+        const resultadoDiv = document.getElementById('resultado');
+        let areaTotal = 0;
+        let areaSemaforo = 0;
+        let detalleCalculo = '';
+
+        if (forma === 'rectangular') {
+            const alto = parseFloat(document.getElementById('alto').value);
+            const ancho = parseFloat(document.getElementById('ancho').value);
+            if (isNaN(alto) || isNaN(ancho) || alto <= 0 || ancho <= 0) return mostrarError();
+            
+            areaTotal = alto * ancho;
+            detalleCalculo = `Área del panel (Base x Altura): <strong>${areaTotal.toFixed(2)} cm²</strong><br><br>`;
+        } 
+        else if (forma === 'circular') {
+            const radio = parseFloat(document.getElementById('radio').value);
+            if (isNaN(radio) || radio <= 0) return mostrarError();
+            
+            areaTotal = Math.PI * Math.pow(radio, 2);
+            detalleCalculo = `Área del panel (π x r²): <strong>${areaTotal.toFixed(2)} cm²</strong><br><br>`;
+        } 
+        else if (forma === 'conica') {
+            const radioCono = parseFloat(document.getElementById('radio-cono').value);
+            const generatriz = parseFloat(document.getElementById('generatriz').value);
+            if (isNaN(radioCono) || isNaN(generatriz) || radioCono <= 0 || generatriz <= 0) return mostrarError();
+            
+            const areaLateral = Math.PI * radioCono * generatriz;
+            areaTotal = areaLateral * 0.40; 
+            detalleCalculo = `Área Lateral (π x r x generatriz): ${areaLateral.toFixed(2)} cm²<br>`;
+            detalleCalculo += `Área Panel Principal (40% del lateral): <strong>${areaTotal.toFixed(2)} cm²</strong><br><br>`;
+        }
+
+        let mensaje = detalleCalculo;
+
+        if (areaTotal < 19.5) {
+            mensaje += "<span style='color:#b91c1c; font-weight:bold;'>Exento:</span> El área es menor a 19.4 cm². No requiere semáforo en envase individual.";
+            resultadoDiv.style.backgroundColor = '#d1fae5';
+            resultadoDiv.innerHTML = mensaje;
+            resultadoDiv.style.display = 'block';
+            return;
+        } 
+        else if (areaTotal >= 19.5 && areaTotal <= 32) {
+            areaSemaforo = 6.25;
+            mensaje += "Rango: 19.5 cm² a 32 cm² (Área mínima de 6.25 cm²).<br>";
+        } 
+        else if (areaTotal >= 33 && areaTotal <= 161) {
+            areaSemaforo = areaTotal * 0.20;
+            mensaje += "Rango: 33 cm² a 161 cm² (Corresponde al 20% del panel).<br>";
+        } 
+        else if (areaTotal >= 162) {
+            areaSemaforo = areaTotal * 0.15;
+            mensaje += "Rango: Mayor a 162 cm² (Corresponde al 15% del panel).<br>";
+        }
+
+        const ladoSemaforo = Math.sqrt(areaSemaforo);
+        const cotaTexto = ladoSemaforo.toFixed(2) + " cm";
+
+        // SVG del semáforo con COTAS dinámicas
+        const svgSemaforo = `
+        <div class="semaforo-grafico">
+            <svg width="180" height="150" viewBox="0 0 180 150">
+                <rect x="25" y="30" width="90" height="90" fill="none" stroke="#333" stroke-width="3" rx="6"/>
+                <rect x="35" y="43" width="70" height="16" fill="#ef4444" rx="3"/>
+                <rect x="35" y="67" width="70" height="16" fill="#eab308" rx="3"/>
+                <rect x="35" y="91" width="70" height="16" fill="#22c55e" rx="3"/>
+                
+                <line x1="25" y1="15" x2="115" y2="15" stroke="#2563eb" stroke-width="1.5" />
+                <line x1="25" y1="10" x2="25" y2="20" stroke="#2563eb" stroke-width="1.5" />
+                <line x1="115" y1="10" x2="115" y2="20" stroke="#2563eb" stroke-width="1.5" />
+                <text x="70" y="10" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="bold" text-anchor="middle">${cotaTexto}</text>
+                
+                <line x1="130" y1="30" x2="130" y2="120" stroke="#2563eb" stroke-width="1.5" />
+                <line x1="125" y1="30" x2="135" y2="30" stroke="#2563eb" stroke-width="1.5" />
+                <line x1="125" y1="120" x2="135" y2="120" stroke="#2563eb" stroke-width="1.5" />
+                <text x="140" y="80" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="bold" dominant-baseline="middle">${cotaTexto}</text>
+            </svg>
+        </div>`;
+
+        mensaje += `Área del semáforo: <strong>${areaSemaforo.toFixed(2)} cm²</strong><br><br>`;
+        mensaje += `Medida exacta del sistema gráfico:<br>`;
+        mensaje += `<span class="resaltado">${ladoSemaforo.toFixed(2)} cm x ${ladoSemaforo.toFixed(2)} cm</span>`;
+        mensaje += svgSemaforo; 
+        
+        resultadoDiv.style.backgroundColor = '#e5e7eb';
+        resultadoDiv.innerHTML = mensaje;
+        resultadoDiv.style.display = 'block';
+    }
+
+    function mostrarError() {
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.style.display = 'block';
+        resultadoDiv.style.backgroundColor = '#fecaca';
+        resultadoDiv.innerHTML = "Por favor, ingresa todos los valores requeridos y mayores a cero.";
+    }
+</script>
+
+</body>
+</html>
